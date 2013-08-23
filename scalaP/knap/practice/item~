@@ -1,0 +1,5 @@
+class Item(vc: Int, wc: Int, tc: Int){
+  val v: Int = vc
+  val w: Int = wc
+  var t: Int = tc
+}

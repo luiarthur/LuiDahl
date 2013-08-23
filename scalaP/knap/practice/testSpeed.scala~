@@ -1,0 +1,9 @@
+import scala.collection.immutable.Vector.empty
+
+object speed{
+  def main(args: Array[String]){
+    println("Making M")
+    var M = Vector.fill(31181, 45)( 2 )
+    println("Finished M")
+    }
+}
