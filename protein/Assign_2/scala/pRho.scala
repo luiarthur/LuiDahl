@@ -1,3 +1,4 @@
+//This will use strings instead of Vectors for rho
 import scala.collection.immutable.Vector.empty
 import scala.io.Source
 import java.io.File
@@ -9,28 +10,28 @@ object pRho{
   val ko = 8; val d = 4;
   val k = ko/.62
   val theta = Array(.170207, .224021, .178348, .427424)
-  def countEta (r:Vector[Char] ,s:Char):Int={
-    var cnt = 0; if (r(0)==s) {cnt = 1}
-    for (i <- 1 to (r.size-1)){
-      if ( r(i-1) != r(i) ) {
-        if (r(i)==s){ cnt+=1 }
+  def countEta (r:String ,s:Char):Int={
+    var cnt = 0; if (r.charAt(0)==s) {cnt = 1}
+    for (i <- 1 to (r.length-1)){
+      if ( r.charAt(i-1) != r.charAt(i) ) {
+        if (r.charAt(i)==s){ cnt+=1 }
       }
     } 
     cnt
   } 
-  def inEta (rv:Vector[Char]):Array[Int]={
+  def inEta (rv:String):Array[Int]={
     val mv = Array(countEta(rv,'H'),countEta(rv,'E'),
                    countEta(rv,'T'),countEta(rv,'C')) 
     mv
   }
-  def getEL (rv:Vector[Char]):Vector[(Char,Int)]={
-    val rv2 = rv:+'Z'
-    val l = rv2.size; var i = 0
+  def getEL (rv:String):Vector[(Char,Int)]={
+    val rv2 = rv:+'A'
+    val l = rv2.length; var i = 0
     var el = Vector.fill(0)('A',0)
     while (i < (l-1)){
       var j = 0
-      while ( (rv2(i+j)==rv2(i+j+1)) & (i+j+2<l) ){ j += 1 }
-      el = el :+ (rv2(i),j+1)
+      while ( (rv2.charAt(i+j)==rv2.charAt(i+j+1)) & (i+j+2 < l) ){ j += 1 }
+      el = el :+ (rv2.charAt(i),j+1)
       i += j+1
     }
     el
@@ -66,7 +67,7 @@ object pRho{
   }
 
   def main(args: Array[String]){
-    val rho = Vector.fill(1)('C'):+'C':+'E':+'E':+'E':+'C':+'C':+'C'
+    val rho = "CEEETTTC" 
     val m = inEta(rho).sum
     val mv = inEta(rho).dropRight(1):+(inEta(rho)(3)-2)
     val EL = getEL(rho)
