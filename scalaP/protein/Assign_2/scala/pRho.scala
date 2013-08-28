@@ -29,7 +29,7 @@ object pRho{
     var el = Vector.fill(0)('A',0)
     while (i < (l-1)){
       var j = 0
-      while ( (rv2(i+j)==rv2(i+j+1)) & (i+j+2<l) ){ j += 1 }
+      while ( (rv2(i+j)==rv2(i+j+1)) & (i+j+2 < l) ) {j+=1}
       el = el :+ (rv2(i),j+1)
       i += j+1
     }
@@ -75,7 +75,8 @@ object pRho{
   }
 
 }
+
 //To Compile: mkdir classes
 //To Compile: scalac -d classes Gamma.scala
-//To Compile:  scalac -d classes pRho.scala 
-//To Execute:  scala -cp classes pRho 
+//To Compile: scalac -d classes pRho.scala 
+//To Execute: scala -cp classes pRho 
