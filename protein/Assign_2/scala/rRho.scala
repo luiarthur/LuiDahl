@@ -1,6 +1,6 @@
 // USING the non normalized rnorm: Just drawing from continuous normal
 import scala.collection.immutable.Vector.empty
-import Gamma.Gamma._
+import classes.Gamma._
 import scala.io.Source
 import java.io.File
 import scala.math._
