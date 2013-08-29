@@ -41,8 +41,8 @@ object pRho{
     }
     el
   }
-  def logNegBinom(x:Double, mu:Double, size:Double):Double={
-    val p = size/(size+mu) 
+  def logNegBinom(x:Double, mean:Double, size:Double):Double={
+    val p = size/(size+mean) 
     val n = size
     logGamma(x+n)-logGamma(n)-logGamma(x+1)+n*log(p)+x*log(1-p)
   }
