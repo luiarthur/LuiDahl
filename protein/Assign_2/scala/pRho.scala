@@ -30,13 +30,10 @@ object pRho{
     var el = Vector.fill(0)('A',0)
     while (i < (l-1)){
       var j = 0
-<<<<<<< HEAD:scalaP/protein/Assign_2/scala/pRho.scala
       while ( (rv2(i+j)==rv2(i+j+1)) & (i+j+2 < l) ){ j += 1 }
       el = el :+ (rv2(i),j+1)
-=======
       while ( (rv2.charAt(i+j)==rv2.charAt(i+j+1)) & (i+j+2 < l) ){ j += 1 }
       el = el :+ (rv2.charAt(i),j+1)
->>>>>>> 2f6e43fe1bf5c3e92a343678074b3c8238c1219b:protein/Assign_2/scala/pRho.scala
       i += j+1
     }
     el

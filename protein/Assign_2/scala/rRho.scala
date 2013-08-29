@@ -1,4 +1,5 @@
 // USING the non normalized rnorm: Just drawing from continuous normal
+import breeze.stats.distributions._
 import scala.collection.immutable.Vector.empty
 import Gamma.Gamma._
 import scala.io.Source
@@ -23,25 +24,25 @@ object rRho{
   }
   def rmultinom(n: Int, v: Vector[Double]):Vector[Int]={
     def rbinom(n: Int, p:Double):Int={
-      def fact(x:Int):Int={
-        if (x==0) {1}
-        else {x * fact(x-1)}
+      def logfact(x:Int):Double={
+        if (x==0) {0}
+        else {log(x) + logfact(x-1)}
       }
-      def f(x:Int):Double={
-         fact(n)/(fact(x)*fact(n-x)) * pow(p,x) * pow(1-p,n-x)
+      def f(x:Int,n:Int,p:Double):Double={
+         exp(logfact(n)-(logfact(x)+logfact(n-x))) * pow(p,x) * pow(1-p,n-x)
       }
       var i = 0; val r = new Random().nextDouble
-      while (!((f(i) <= r) & (r < f(i+1)))){i += 1} 
+      while (!((f(i,n,p) <= r) & (r < f(i+1,n,p)))){i += 1} 
       i
     }  
     var N = n; var x = Vector.fill(0)(0)
     val p = Vector.tabulate(v.size)(i => v(i)/(1-v.dropRight(v.size-i).sum))
     for (i <- 0 to v.size-1){
       x = x :+ rbinom(N,p(i))
-      N -= x(i)
+      N = N - x(i)
     } 
     x
-  }  
+  }
   def rLamGivenEta (eta: Char):Int= {
     if (eta=='H'){5+rnbinom(1.885880,6.953392)}
     else if (eta=='E'){3+rnbinom(2.521091,2.899121)}
@@ -61,6 +62,7 @@ object rRho{
   def main(args: Array[String]){
     val m = (new Random().nextGaussian*(5.526382/d) + 2.347253+.154154*k).toInt
     val mv = rmultinom(m-2,theta)
+    //val mv = Vector(1,0,0,m-3) 
     var valid = false
     var rho = ""
     while (!valid){
