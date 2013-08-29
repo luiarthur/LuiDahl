@@ -1,0 +1,5 @@
+# TO CHANGE WHAT SHOWS UP BEFORE YOU TYPE COMMANDS IN TERMINAL, TYPE:
+#   export PS1="\d :~$ "
+#   see http://askubuntu.com/questions/16728/hide-current-working-directory-in-terminal  
+#   for more info.
+
