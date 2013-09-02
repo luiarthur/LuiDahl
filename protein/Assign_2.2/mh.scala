@@ -1,7 +1,6 @@
-import Rho._
+import Rho._ 
+  object mh { 
 
-
-object mh {
   def outData(m: Array[String], dest){
     val pw = new java.io.PrintWriter(new File(dest))
     val N = m.size
@@ -16,10 +15,53 @@ object mh {
       pw.close()
     }
   }
-  class q(t:Double){
-    def prob{
+
+  class q {
+    def prob(a:String,b:String,ko:Int,d:Int,t:Int):Double={
+      if (t <=.5){1}
+      else if (t <= .75) {}
+      else {}
     }
-    def draw{
+    def draw(a:String,t:Double):String={
+      val m = inEta(a).sum
+      val g = new Random().nextInt(m-2) + 1
+      var blks =Array('H','E','T','C')
+
+      if (t <= .25) {
+        for (i <- 0 to blks.length){
+          if ( (a(g-1)==blks(i)) || (a(g)==blks(i)) || (a(g+1)==blks(i)) ){
+            blks.updated(i,'Z')
+          }
+        }
+        blks = blks.filter (s => s!='Z')
+        val r = new Random().nextInt(blks.size) 
+        val newBlk = (blks(r),getEL(a)(g)._2)
+        getRho(getEL(a) updated (g, newBlk))
+      }
+
+      else if (t <= .5) {
+        val z = getEL(a)(g-1)._2+getEL(a)(g)._2-1
+        val p = new Random().nextInt(z)+1
+        getRho ((getEL(a) updated (g-1, (getEL(a)(g)._1,p) ) ) updated
+                (m, (getEL(a)(g)._1,z-p) ) )
+      }
+
+      else if (t <= .75) {
+        val z = getEL(a)(g)._2 - 1
+        val p = new Random().nextInt(z) + 1
+        if ( (a(g-1)==blks(i)) || (a(g)==blks(i)) ){
+            blks.updated(i,'Z')
+        }
+        blks = blks.filter (s => s!='Z')
+        val r = new Random().nextInt(blks.size)
+        var tempEL = getEL(a) updated (g, (getEL(a)(g)._1,z)) 
+        tempEL = (tempEL.dropRight(m-g) :+ (blks(r),z-p) ) ++ tempEL.drop(g)        
+      }
+
+      else {
+        
+      }
+
     }
   }
 
@@ -36,8 +78,8 @@ object mh {
       M.update(i, M(i-1) )
       val t = new Random().nextDouble
       val cand = q.draw(M(i),t)
-      val r = Rho.prob(cand,ko=koIn,d=dIn) / Rho.prob(M(i),ko=koIn,d=dIn) * 
-              q.prob(M(i),cand,ko=koIn,d=dIn) / q.prob(cand,M(i),ko=koIn,d=dIn) 
+      val r = Rho.prob(cand,koIn,dIn) / Rho.prob(M(i),koIn,dIn) * 
+              q.prob(M(i),cand,koIn,dIn,t) / q.prob(cand,M(i),koIn,dIn,t) 
       if (r > new Random().nextDouble){
         M(i) = cand
         cnt += 1
