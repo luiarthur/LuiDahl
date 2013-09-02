@@ -71,7 +71,6 @@ class Rho{
   }
    
   def draw(ko:Int=8, d:Int=4):String={
-    val k = ko/.65
     var rho = ""
     var valid = false
     var etas = ""
@@ -181,3 +180,5 @@ object Rho extends Rho
 
 //To Compile rRho:  scalac -d classes Rho.scala
 //To run rRho:      scala -cp classes Rho
+//TO Compile ALL:   scalac -d classes -cp classes *.scala
+//To run test:      scala -cp classes test
