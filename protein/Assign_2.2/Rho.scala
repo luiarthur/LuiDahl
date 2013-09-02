@@ -55,6 +55,7 @@ class Rho{
   } 
   def mSamp (ko:Int):Int={
     val k = ko/.62; val d = 4
+    //val k = ko; val d =4
     val r = new Random().nextDouble
     def f(x:Double):Double={
       new Gaussian(2.347253+.154154*k, 5.526382/d).pdf(x) 
@@ -70,7 +71,7 @@ class Rho{
   }
    
   def draw(ko:Int=8, d:Int=4):String={
-    val k = ko/.62
+    val k = ko/.65
     var rho = ""
     var valid = false
     var etas = ""
@@ -83,6 +84,7 @@ class Rho{
       val tempEL = Vector( ('H',mv(0)), ('E',mv(1)), ('T',mv(2)), ('C',mv(3)) )
       val tempRho = getRho(tempEL)
       etas = "C".concat(Random.shuffle(tempRho.toSeq).mkString :+ 'C')
+/*
       for (i <- 1 to (etas.length-2) ){
         if (etas(i)==etas(i-1)){
           for (j <- i to (etas.length-2) ){
@@ -95,6 +97,7 @@ class Rho{
           } 
         } 
       }
+*/
       for (i <- 1 to (etas.length-1)){
         if (etas(i-1)==etas(i)){valid=false}
       }
