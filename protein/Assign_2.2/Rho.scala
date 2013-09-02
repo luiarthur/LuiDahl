@@ -3,6 +3,11 @@
 //   The parameters r & p refer to the number of FAILURES before stopping & 
 //   the probability of SUCCESS respectively.
 //   THINK CLEARLY before implementing.
+// PROBLEM TO FIX: 
+//   It appears that in my samples of rho length = 8, 
+//   sequences like CEEETTTC and CTTTEEEC appear less frequently than they
+//   ought to. That leads me to think there is a problem with my
+//   draw function.
 
 package Rho
 
