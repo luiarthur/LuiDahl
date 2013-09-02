@@ -84,7 +84,8 @@ class Rho{
       val tempEL = Vector( ('H',mv(0)), ('E',mv(1)), ('T',mv(2)), ('C',mv(3)) )
       val tempRho = getRho(tempEL)
       etas = "C".concat(Random.shuffle(tempRho.toSeq).mkString :+ 'C')
-/*
+
+     // NOT SURE IF THIS CHUNK IS USEFUL
       for (i <- 1 to (etas.length-2) ){
         if (etas(i)==etas(i-1)){
           for (j <- i to (etas.length-2) ){
@@ -96,8 +97,8 @@ class Rho{
             } 
           } 
         } 
-      }
-*/
+      }// END OF THIS CHUNK
+
       for (i <- 1 to (etas.length-1)){
         if (etas(i-1)==etas(i)){valid=false}
       }
