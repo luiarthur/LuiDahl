@@ -60,7 +60,10 @@ class Rho{
     def f(x:Double):Double={
       new Gaussian(2.347253+.154154*k, 5.526382/d).pdf(x) 
     }
-    var vf= Vector.tabulate(ko-3)(i => f(i+3) )
+    // -3 because must have at least 3 blocks. 
+    // -2 because must have < k-2 blocks.
+
+    var vf= Vector.tabulate(ko-3+(8-ko-2))(i => f(i+3) )
     for (i <- 1 to (vf.size-1) ){
       vf = vf updated ( i, (vf(i-1)+vf(i))/vf.sum )
     }
