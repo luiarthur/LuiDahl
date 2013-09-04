@@ -3,7 +3,7 @@ import scala.collection.immutable.Vector.empty
 
 object test{
   def main(args:Array[String]){
-    val N = 10000; val in = 8
+    val N = 10000; val in = 9
     for ( i <- 1 to (N/200) ) print("#") 
     println()
     def res (i:Int):String={
