@@ -21,6 +21,10 @@ import util.Random
 
 class Rho{
 //rRho//////////////////////////////////////////////////
+
+  // make my RANDOMS all at the beginning. Run loops in here. 
+  // Don't create objects every time! Takes much more time.
+
   val theta = Vector(.170207, .224021, .178348, .427424)
   def rnbinom(mean: Double, size: Double):Int={
     val x = new NegativeBinomial(size,mean/(size+mean)).draw
