@@ -22,7 +22,7 @@ import Rho._
   //   How do I write the probabilty for merge and split?
   //   How do I write merge function?
 
-  class q {
+  class Proposal {
 
     def prob(a:String, b:String, ko:Int, d:Int, t:Int): Double = {
       if (t <=.5){1}
@@ -47,7 +47,7 @@ import Rho._
         getRho(getEL(a) updated (g, newBlk))
       }
 
-      else if (t <= .5) { // change bnd. pos. function
+      else if (t <= .5) { // change boundary position function
         val z = getEL(a)(g-1)._2+getEL(a)(g)._2-1
         val p = ran.nextInt(z)+1
         getRho ((getEL(a) updated (g-1, (getEL(a)(g)._1,p) ) ) updated
@@ -92,9 +92,9 @@ import Rho._
     for (i <- 1 to (N-1)){
       M.update(i, M(i-1) )
       val t = ran.nextDouble
-      val cand = q.draw(M(i),t)
+      val cand = Proposal.draw(M(i),t)
       val r = Rho.prob(cand,koIn,dIn) / Rho.prob(M(i),koIn,dIn) * 
-              q.prob(M(i),cand,koIn,dIn,t) / q.prob(cand,M(i),koIn,dIn,t) 
+              Proposal.prob(M(i),cand,koIn,dIn,t) / Proposal.prob(cand,M(i),koIn,dIn,t) 
       if (r > ran.nextDouble){
         M(i) = cand
         cnt += 1
