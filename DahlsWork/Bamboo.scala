@@ -31,7 +31,7 @@ class Bamboo private (val ssBlocks: SSBlocks) {
     val m = if ( nB == 1 ) moves.filterNot( x => x._1 == "reposition" || x._1 == "merge" ) else moves
     sample(m) match {
       case "switch" =>
-        val blockIndex = sample(nB)
+        val blockIndex = sample(nB) // nB = number of Blocks
         val block = fBamboo(blockIndex)
         var poss = possibilities - block._1
         if ( blockIndex > 0 ) poss -= fBamboo(blockIndex-1)._1
@@ -161,7 +161,7 @@ object Bamboo {
     candidates
   }
 
-  def sample[T](weights: Map[T,Double]) = {
+  def sample[T](weights: Map[T,Double]) = { // What does this sample[T] do?
     val cum = computeCummulativeTable(weights)
     sampleWithTable(cum,cum.last._2)
   }
