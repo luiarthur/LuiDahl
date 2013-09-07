@@ -1,0 +1,12 @@
+:%!fmt -80                            Align all lines
+:set tw=80 then, v, highlight, gq     Set text width to 80
+:setlocal spell spelllang=en_us       Spell check
+/word                                 finds word
+:%s/old/new/g                         find and replace in entire file
+:s/old/new/g                          find and replace in current line
+:nohlsearch                           turns off highlight
+
+:sp ----------------------------------split screen
+:vsp ---------------------------------vertical split screen
+Ctrl-ww ------------------------------change panes
+
