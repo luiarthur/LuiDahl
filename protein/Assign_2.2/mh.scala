@@ -1,9 +1,10 @@
 import Rho._ 
-  object mh { 
+
+object mh { 
 
   val ran = new Random()
 
-  def outData(m: Array[String], dest):Int={
+  def outData(m: Array[String], dest:String):Int={
     val pw = new java.io.PrintWriter(new File(dest))
     val N = m.size
     try { 
