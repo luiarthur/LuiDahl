@@ -3,7 +3,7 @@ import Rho._
 
   val ran = new Random()
 
-  def outData(m: Array[String], dest){
+  def outData(m: Array[String], dest):Int={
     val pw = new java.io.PrintWriter(new File(dest))
     val N = m.size
     try { 
@@ -16,6 +16,7 @@ import Rho._
     finally {
       pw.close()
     }
+    0
   }
 
   // Questions:
@@ -24,58 +25,59 @@ import Rho._
 
   class Proposal {
 
-    def prob(a:String, b:String, ko:Int, d:Int, t:Int): Double = {
-      if (t <=.5){1}
-      else if (t <= .75) {}
-      else {}
-    }
-
     def draw(a:String,t:Double):String={
       val m = inEta(a).sum
       var g = ran.nextInt(m-2) + 1
       var blks =Array('H','E','T','C')
 
-      if (t <= .25) { // switch function
-        for (i <- 0 to blks.length){
+      def switch():String= { // switch function
+        for (i <- 0 to (blks.length-1)){
           if ( (a(g-1)==blks(i)) || (a(g)==blks(i)) || (a(g+1)==blks(i)) ){
-            blks.updated(i,'Z')
+            blks.update(i,'Z')
           }
         }
         blks = blks.filter (s => s!='Z')
         val r = ran.nextInt(blks.size) 
         val newBlk = (blks(r),getEL(a)(g)._2)
-        getRho(getEL(a) updated (g, newBlk))
+        (getRho(getEL(a) updated (g, newBlk)), 1, 1)
       }
 
-      else if (t <= .5) { // change boundary position function
+      def changeBound():String= { // change boundary position function
         val z = getEL(a)(g-1)._2+getEL(a)(g)._2-1
         val p = ran.nextInt(z)+1
-        getRho ((getEL(a) updated (g-1, (getEL(a)(g)._1,p) ) ) updated
-                (m, (getEL(a)(g)._1,z-p) ) )
+        (getRho ((getEL(a) updated (g-1, (getEL(a)(g)._1,p) ) ) updated
+                (m, (getEL(a)(g)._1,z-p) )), 1, 1 )
       }
 
-      else if (t <= .75) { // split function
+      def split(from:String, to:String):String= { // split function
         val z = getEL(a)(g)._2 - 1
         val p = ran.nextInt(z) + 1
-        if ( (a(g-1)==blks(i)) || (a(g)==blks(i)) ){
-            blks.updated(i,'Z')
+        for (i <- 0 to (blks.length-1)){
+          if ( (a(g-1)==blks(i)) || (a(g)==blks(i)) ){ blks.update(i,'Z') }
         }
         blks = blks.filter (s => s!='Z')
         val r = ran.nextInt(blks.size)
         var tempEL = getEL(a) updated (g, (getEL(a)(g)._1,z)) 
         tempEL = (tempEL.dropRight(m-g) :+ (blks(r),z-p) ) ++ tempEL.drop(g)        
-        getRho(tempEL)
+        val b = getRho(tempEL)
+        (b,.25/(m-2)/(inEta(a)._g-1)/(blks.length), merge(from=b, to=a)._2)
       }
 
-      else { // merge function is very hard.
+      def merge(from:String, to:String):String={ // merge function is very hard.
         var tempEL = getEL (a)
         // m-3 & + 2 because I don't want to merge into the 0th element (C)
-	while (tempEL(g-1)._1==tempEL(g+1)._1){g = ran.nextInt(m-3) + 2} 
+	      while (tempEL(g-1)._1==tempEL(g+1)._1){g = ran.nextInt(m-3) + 2} 
         tempEL = tempEL updated (g+1, (tempEL(g+1)._1,
                                  tempEL(g)._2+tempEL(g+1)._2))
         tempEL = tempEL.splitAt(g)._1 ++ tempEL.splitAt(g).drop(1)
-        getRho(tempEL)
+        val b = getRho(tempEL)
+        (b, .5*.25/(m-3), split(b,a)._2)
       }
+      
+      if (t <= .25) { switch()}
+      else if (t <= .5) { changeBound() }
+      else if (t <= .75) { split( from =_, to =_) }
+      else { merge( from =_, to =_) }
 
     }
   }
@@ -92,9 +94,10 @@ import Rho._
     for (i <- 1 to (N-1)){
       M.update(i, M(i-1) )
       val t = ran.nextDouble
-      val cand = Proposal.draw(M(i),t)
+      val cpp = Proposal.draw(M(i),t)
+      cand = cpp._1; cand2Curr = cpp._2; curr2Cand = cpp._3
       val r = Rho.prob(cand,koIn,dIn) / Rho.prob(M(i),koIn,dIn) * 
-              Proposal.prob(M(i),cand,koIn,dIn,t) / Proposal.prob(cand,M(i),koIn,dIn,t) 
+              cand2Curr / curr2Cand
       if (r > ran.nextDouble){
         M(i) = cand
         cnt += 1
