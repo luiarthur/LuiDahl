@@ -1,4 +1,7 @@
 import Rho._ 
+import util.Random
+import java.io.File
+import scala.io.Source
 
 object mh { 
 
@@ -24,6 +27,7 @@ object mh {
   //   How do I write the probabilty for merge and split?
   //   How do I write merge function?
 
+  // NEED TO ADD Rho. before each function of Rho
   class Proposal {
 
     def draw(a:String,t:Double):String={
