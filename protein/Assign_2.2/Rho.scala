@@ -123,9 +123,9 @@ class Rho{
         if (rho.length != ko){valid=false}
       }
       arRho.update(n,rho)
-      if ( n % 200 == 0 ) print(">")
+      //if ( n % 200 == 0 ) print(">")
     }
-    println()
+    //println()
     arRho
   }
 //pRho////////////////////////////////////////////////////////////////

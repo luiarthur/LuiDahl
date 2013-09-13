@@ -7,19 +7,16 @@ object mh {
 
   val ran = new Random()
 
-  def outData(m: Array[String], dest:String):Int={
+  def outData(m: Array[String], dest: String): Int = 
+  {
     val pw = new java.io.PrintWriter(new File(dest))
     val N = m.size
-    try { 
-      var i = 0    
-      while (i < N ){
-        pw.write( m(i) + s"\n")
-        i = i + 1
-      }
+    try 
+    { 
+      var i = 0; while (i < N)
+      { pw.write( m(i) + s"\n"); i = i + 1 }
     } 
-    finally {
-      pw.close()
-    }
+    finally { pw.close() }
     0
   }
 
@@ -30,72 +27,79 @@ object mh {
   // NEED TO ADD Rho. before each function of Rho
   class Proposal {
 
-    def draw(a:String,t:Double):(String, Double, Double)={
+    def draw(a: String, t: Double): (String, Double, Double) =
+    {
       val m = Rho.inEta(a).sum
-      var g = ran.nextInt(m-2) + 1
+      var g = ran.nextInt(m-1) + 1 // picks the block to change
+                                   // draws from positions 1 to m-1
+                                   // of the amino acid sequence.
+                                   // i.e. If the a.a. has length m,
+                                   //      I can make changes at 
+                                   //      every position except for
+                                   //      the very first one.
       var blks =Array('H','E','T','C')
 
-      def switch():(String, Double, Double)=
-      { // switch function
-        for (i <- 0 to (blks.length-1)){
-          if ( (a(g-1)==blks(i)) || (a(g)==blks(i)) || (a(g+1)==blks(i)) ){
-            blks.update(i,'Z')
-          }
-        }
-        blks = blks.filter (s => s!='Z')
+      def switch: (String, Double, Double) =
+      {
+        //println("SWITCH")
+        // CANNOT sample an a.a that is going to merge or keep chain unmerged.
+        blks = blks.filter( s => ( (a(g-1) != s) & (a(g) != s) & (a(g-1) != s) ) )
         val r = ran.nextInt(blks.size) 
         val newBlk = (blks(r),Rho.getEL(a)(g)._2)
         (Rho.getRho(Rho.getEL(a) updated (g, newBlk)), 1.0, 1.0)
       }
       
-
-      // NEEDS FIXING. OutOfBound ERROR:
-      def changeBound():(String, Double, Double) =
-      { // change boundary position function
+      // Check for OutOfBound ERROR:
+      def changeBound: (String, Double, Double) =
+      {
+        //println("CHANGEBOUNDARY")
         val z = Rho.getEL(a)(g-1)._2 + Rho.getEL(a)(g)._2
         val p = ran.nextInt(z-1) + 1
-        //println("DID A CHANGEBOUND "+m+" "+g+" "+p+" "+z+" "+Rho.getEL(a))
         (Rho.getRho((Rho.getEL(a) updated (g-1, (Rho.getEL(a)(g-1)._1,p) ) ) updated
-                (g, (Rho.getEL(a)(g)._1,z-p) )), 1.0, 1.0 )
+                   (g, (Rho.getEL(a)(g)._1,z-p) )), 1.0, 1.0 )
       }
 
-
-      def split(from:String, to:String):(String, Double, Double) = 
-      { // split function
-        val z = Rho.getEL(a)(g)._2 - 1
-        val p = ran.nextInt(z) + 1
-        for (i <- 0 to (blks.length-1)){
-          if ( (a(g-1)==blks(i)) || (a(g)==blks(i)) ){ blks.update(i,'Z') }
+      // Check for OutOfBound ERROR:
+      def split(from: String, to: String): (String, Double, Double) = 
+      { 
+        //println("SPLIT: "+a)
+        val z = Rho.getEL(a)(g)._2 
+        if ( z > 1 ){
+          val p = ran.nextInt(z-1) + 1
+          blks = blks.filter( s => ( (s != a(g-1)) & (s != a(g)) ) )
+          val r = ran.nextInt(blks.size)
+          var tempEL = Rho.getEL(a) updated (g, (Rho.getEL(a)(g)._1,p)) 
+              tempEL = (tempEL.dropRight(m-g) :+ (blks(r),z-p)) ++ tempEL.drop(g)
+          val b = Rho.getRho(tempEL)
+          val c = if (to == "") {merge(from=b, to=a)._2} else {1}
+          (b, .25/(m-2)/(z-1)/(blks.length), c)
         }
-        blks = blks.filter (s => s!='Z')
-        val r = ran.nextInt(blks.size)
-        var tempEL = Rho.getEL(a) updated (g, (Rho.getEL(a)(g)._1,p)) 
-        tempEL = (tempEL.dropRight(m-g) :+ (blks(r),z-p)) ++ tempEL.drop(g)        
-        val b = Rho.getRho(tempEL)
-        //(b,.25/(m-2)/(Rho.inEta(a)._g-1)/(blks.length), merge(from=b, to=a)._2)
-        val c = if (to == "") {merge(from=b, to=a)._2} else {1}
-        (b, .25/(m-2)/z/(blks.length), c)
+        else { (from, 1, 1) }
       }
 
-      def merge(from:String, to:String):(String, Double, Double)=
-      { // merge function is very hard.
+      def merge(from: String, to: String): (String, Double, Double) =
+      {
+        //println("MERGE: "+a)
         var tempEL = Rho.getEL(a)
-        if (m <= 3) { (from,1,1) }
-        else
+        if ( (g != 1) & (m>3) )
         {
           // m-3 & + 2 because I don't want to merge into the 0th element (C)
-          while (tempEL(g-1)._1==tempEL(g+1)._1){g = ran.nextInt(m-3) + 2} 
-          tempEL = tempEL updated (g+1, (tempEL(g+1)._1,
-                                   tempEL(g)._2+tempEL(g+1)._2))
-          tempEL = tempEL.splitAt(g)._1 ++ tempEL.splitAt(g+1)._2
-          val b = Rho.getRho(tempEL)
-          val c = if (to == "") {split(b,a)._2} else {1}
-          (b, .5*.25/(m-3), c)
+          if ( g == m-1 ) { (from, 1, 1) } 
+          else if ( tempEL(g-1)._1 == tempEL(g+1)._1) { (from, 1, 1) }
+          else {
+            tempEL = tempEL updated (g+1, (tempEL(g+1)._1,
+                                     tempEL(g)._2 + tempEL(g+1)._2))
+            tempEL = tempEL.splitAt(g)._1 ++ tempEL.splitAt(g+1)._2
+            val b = Rho.getRho(tempEL)
+            val c = if (to == "") {split(b,a)._2} else {1}
+            (b, .5*.25/(m-3), c)
+          }
         }
+        else { (from, 1, 1) }
       }
       
-      if (t <= .25) { switch()}
-      else if (t <= .5) { changeBound() }
+      if (t <= .25) { switch}
+      else if (t <= .5) { changeBound }
       else if (t <= .75) { split( from =a, to ="" ) }
       else { merge( from =a, to ="" ) }
 
@@ -122,7 +126,8 @@ object mh {
       val cand = cpp._1; val cand2Curr = cpp._2; val curr2Cand = cpp._3
       val r = Rho.prob(cand,koIn,dIn) / Rho.prob(M(i),koIn,dIn) * 
               cand2Curr / curr2Cand
-      if ((r > ran.nextDouble) & (cand.length==koIn)){
+      if ((r > ran.nextDouble) & (cand.length==koIn))
+      {
         M(i) = cand
         cnt += 1
       }
