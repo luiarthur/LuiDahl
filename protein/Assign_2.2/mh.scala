@@ -135,6 +135,19 @@ object mh {
     } 
     println()
     println(cnt*1.0/N)
-    outData(M.drop(5000),myFile)
+    //print data in a useful format
+    val dM = M.drop(5000).distinct
+    val MM = Array.tabulate(dM.size)
+    {
+      i => (dM(i), (M.count(s => s == dM(i)).toDouble/M.size *
+                    100000).toInt/100000.0 )
+    } 
+    var sumTheorProb = 0.0
+    for ( i <- 0 to (dM.size-1) )
+    { sumTheorProb = sumTheorProb + Rho.prob(dM(i)) }  
+
+    MM.foreach( s => println(s._1+"\t"+s._2+"\t\t"+Rho.prob(s._1)/sumTheorProb) ) 
+    //MM.foreach( s => println(s._1+"\t"+s._2+"\t\t"+Rho.prob(s._1)) ) 
+    //outData(MM.drop(5000),myFile)
   }
 }
