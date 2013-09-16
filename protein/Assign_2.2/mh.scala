@@ -109,17 +109,17 @@ object mh {
   def main(args:Array[String]){
     
     //  INITIALIZE:
-    val N = 150000; val koIn = 8; val dIn = 4; var cnt = 0
+    val N = 250000; val koIn = 8; val dIn = 4; var cnt = 0
     var M = new Array[String](N)
     val myFile = "mhResults.txt"
     M.update(0,Rho.draw(N=1,ko=koIn,d=dIn)(0))
     val proposal = new Proposal
-    for (i <- 1 to N/2000) {print("#")}; println()
+    for (i <- 1 to N/2500) {print("#")}; println()
     //  END INITIALIZE
 
     for (i <- 1 to (N-1))
     {
-      if ( (i-1)%2000 == 0 ) {print(">")}
+      if ( (i-1)%2500 == 0 ) {print(">")}
       M.update(i, M(i-1) )
       val t = ran.nextDouble
       val cpp = proposal.draw(M(i),t)
@@ -134,7 +134,8 @@ object mh {
       //println(M(i)+" "+cpp._1+" "+r)
     } 
     println()
-    println(cnt*1.0/N)
+    println("Acceptance: "+cnt*1.0/N+"\t"+"N: "+N)
+    println()
     //print data in a useful format
     val dM = M.drop(5000).distinct
     val MM = Array.tabulate(dM.size)
@@ -147,6 +148,7 @@ object mh {
     { sumTheorProb = sumTheorProb + Rho.prob(dM(i)) }  
 
     MM.foreach( s => println(s._1+"\t"+s._2+"\t\t"+Rho.prob(s._1)/sumTheorProb) ) 
+    println()
     //MM.foreach( s => println(s._1+"\t"+s._2+"\t\t"+Rho.prob(s._1)) ) 
     //outData(MM.drop(5000),myFile)
   }
