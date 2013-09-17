@@ -109,7 +109,7 @@ object mh {
   def main(args:Array[String]){
     
     //  INITIALIZE:
-    val N = 250000; val koIn = 7; val dIn = 4; var cnt = 0
+    val N = 250000; val koIn = 8; val dIn = 4; var cnt = 0
     var M = new Array[String](N)
     val myFile = "mhResults.txt"
     M.update(0,Rho.draw(N=1,ko=koIn,d=dIn)(0))
@@ -125,7 +125,7 @@ object mh {
       val cpp = proposal.draw(M(i),t)
       val cand = cpp._1; val cand2Curr = cpp._2; val curr2Cand = cpp._3
       val r = Rho.prob(cand,koIn,dIn) / Rho.prob(M(i),koIn,dIn) * 
-              cand2Curr / curr2Cand
+              curr2Cand / cand2Curr
       if ((r > ran.nextDouble) & (cand.length==koIn))
       {
         M(i) = cand
