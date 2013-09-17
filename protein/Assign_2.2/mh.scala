@@ -131,13 +131,14 @@ object mh {
         M(i) = cand
         cnt += 1
       }
-      //println(M(i)+" "+cpp._1+" "+r)
     } 
     println()
     println("Acceptance: "+cnt*1.0/N+"\t"+"N: "+N+"\t"+"Burn in: "+5000)
-    println()
+
     //print data in a useful format
     val dM = M.drop(5000).distinct
+    println("Number of Distinct Sequences: "+dM.size)
+    println()
     val MM = Array.tabulate(dM.size)
     {
       i => (dM(i), (M.count(s => s == dM(i)).toDouble/M.size *
