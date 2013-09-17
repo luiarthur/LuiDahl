@@ -109,7 +109,7 @@ object mh {
   def main(args:Array[String]){
     
     //  INITIALIZE:
-    val N = 250000; val koIn = 8; val dIn = 4; var cnt = 0
+    val N = 250000; val koIn = 7; val dIn = 4; var cnt = 0
     var M = new Array[String](N)
     val myFile = "mhResults.txt"
     M.update(0,Rho.draw(N=1,ko=koIn,d=dIn)(0))
@@ -134,7 +134,7 @@ object mh {
       //println(M(i)+" "+cpp._1+" "+r)
     } 
     println()
-    println("Acceptance: "+cnt*1.0/N+"\t"+"N: "+N)
+    println("Acceptance: "+cnt*1.0/N+"\t"+"N: "+N+"\t"+"Burn in: "+5000)
     println()
     //print data in a useful format
     val dM = M.drop(5000).distinct
@@ -147,7 +147,7 @@ object mh {
     for ( i <- 0 to (dM.size-1) )
     { sumTheorProb = sumTheorProb + Rho.prob(dM(i)) }  
 
-    MM.foreach( s => println(s._1+"\t"+s._2+"\t\t"+Rho.prob(s._1)/sumTheorProb) ) 
+    MM.foreach( s => println(s._1+"\t\t"+s._2+"\t\t"+Rho.prob(s._1)/sumTheorProb) ) 
     println()
     //MM.foreach( s => println(s._1+"\t"+s._2+"\t\t"+Rho.prob(s._1)) ) 
     //outData(MM.drop(5000),myFile)
