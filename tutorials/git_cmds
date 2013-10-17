@@ -1,0 +1,58 @@
+INITIALIZE:
+  Go to your directory, and type
+  $ git init
+
+TRACK / STAGE:
+  $ git add <filename>
+
+COMMIT:
+  $ git commit -m 'ADD A MESSAGE THAT DESCRBIES THE CHANGES YOU'VE MADE'
+
+TO STAGE & COMMIT SIMULTANEOUSLY:
+  $ git commit -a -m 'message'
+  # -a means add
+
+STATUS:
+  $ git status
+
+LOG:
+  $ git log -p -2
+  # -p for "PRINT DIFFERENCE"; -2 for "THE LAST TWO VERSIONS"
+
+VIEW PREVIOUS VERSIONS:
+  $ git show HEAD~2:./git_cmds
+  # HEAD~2 specifies the 2nd last version
+  # The "./" completes the path to the file
+
+REMOVE INITIALIZED GIT FILES:
+  $ rm -rf .git
+  # YOU CAN THEN DELETE THE FOLDER YOU INITIALIZED.
+  # WARNING: BE SURE YOU'RE IN THE RIGHT DIRECTORY!!!!!
+
+VIEW ALL REMOTES:
+  $ git remote -v
+  # -v shows the shortnames and the URL
+
+DOWNLOAD A FOLDER FROM A REPO:
+  $ git clone https://github.com/luiarthur/LuiDahl.git
+  # luiarthur is my username; LuiDahl is the folder
+  
+  $ git clone https://github.com/luiarthur/LuiDahl.git temp
+  # This saves the file as temp in the current directory
+  # cd into the directory & start working
+
+ADDING A SHORTNAME:
+  $ git remote add ld https://github.com/luiarthur/LuiDahl.git
+  # ld becomes the shortname for the URL
+___________________________________________________________________
+NEED TO REVIEW THE ITEMS BELOW:
+
+UPDATE YOUR FOLDER FROM THE REPO:
+  $ git pull ld master
+  # where ld is the shortname for the repo
+
+UPDATE THE REPO:
+  $ git push ld master
+  # not quite sure what master does...
+
+
