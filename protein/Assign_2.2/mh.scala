@@ -43,10 +43,10 @@ object mh {
       {
         //println("SWITCH")
         // CANNOT sample an a.a that is going to merge or keep chain unmerged.
-        blks = blks.filter( s => ( (a(g-1) != s) & (a(g) != s) & (a(g-1) != s) ) )
+        blks = blks.filter( s => ( (a(g-1) != s) & (a(g) != s) & (a(g+1) != s) ) )
         val r = ran.nextInt(blks.size) 
         val newBlk = (blks(r),Rho.getEL(a)(g)._2)
-        (Rho.getRho(Rho.getEL(a) updated (g, newBlk)), 1.0, 1.0)
+        (Rho.getRho(Rho.getEL(a) updated (g, newBlk)), 1, 1)
       }
       
       // Check for OutOfBound ERROR:
@@ -56,19 +56,19 @@ object mh {
         val z = Rho.getEL(a)(g-1)._2 + Rho.getEL(a)(g)._2
         val p = ran.nextInt(z-1) + 1
         (Rho.getRho((Rho.getEL(a) updated (g-1, (Rho.getEL(a)(g-1)._1,p) ) ) updated
-                   (g, (Rho.getEL(a)(g)._1,z-p) )), 1.0, 1.0 )
+                   (g, (Rho.getEL(a)(g)._1,z-p) )), 1, 1 )
       }
 
       // Check for OutOfBound ERROR:
       def split(from: String, to: String): (String, Double, Double) = 
       { 
         //println("SPLIT: "+a)
-        val z = Rho.getEL(a)(g)._2 
+        val z = Rho.getEL(from)(g)._2 
         if ( z > 1 ){
           val p = ran.nextInt(z-1) + 1
-          blks = blks.filter( s => ( (s != a(g-1)) & (s != a(g)) ) )
+          blks = blks.filter( s => ( (s != from(g-1)) & (s != from(g)) ) )
           val r = ran.nextInt(blks.size)
-          var tempEL = Rho.getEL(a) updated (g, (Rho.getEL(a)(g)._1,p)) 
+          var tempEL = Rho.getEL(from) updated (g, (Rho.getEL(from)(g)._1,p)) 
               tempEL = (tempEL.dropRight(m-g) :+ (blks(r),z-p)) ++ tempEL.drop(g)
           val b = Rho.getRho(tempEL)
           val c = if (to == "") {merge(from=b, to=a)._2} else {1}
@@ -80,10 +80,10 @@ object mh {
       def merge(from: String, to: String): (String, Double, Double) =
       {
         //println("MERGE: "+a)
-        var tempEL = Rho.getEL(a)
-        if ( (g != 1) & (m>3) )
+        var tempEL = Rho.getEL(from)
+        if ( (g > 1) & (m > 3) )
         {
-          // m-3 & + 2 because I don't want to merge into the 0th element (C)
+          //println("m is greater than 3")
           if ( g == m-1 ) { (from, 1, 1) } 
           else if ( tempEL(g-1)._1 == tempEL(g+1)._1) { (from, 1, 1) }
           else {
@@ -92,7 +92,7 @@ object mh {
             tempEL = tempEL.splitAt(g)._1 ++ tempEL.splitAt(g+1)._2
             val b = Rho.getRho(tempEL)
             val c = if (to == "") {split(b,a)._2} else {1}
-            (b, .5*.25/(m-3), c)
+            (b, .25*.5/(m-2), c)
           }
         }
         else { (from, 1, 1) }
@@ -139,11 +139,13 @@ object mh {
     val dM = M.drop(5000).distinct
     println("Number of Distinct Sequences: "+dM.size)
     println()
-    val MM = Array.tabulate(dM.size)
+
+    val MM = (Array.tabulate(dM.size)
     {
       i => (dM(i), (M.count(s => s == dM(i)).toDouble/M.size *
                     100000).toInt/100000.0 )
-    } 
+    }).sorted 
+
     var sumTheorProb = 0.0
     for ( i <- 0 to (dM.size-1) )
     { sumTheorProb = sumTheorProb + Rho.prob(dM(i)) }  
