@@ -1,0 +1,4 @@
+#!/bin/bash
+
+R CMD BATCH --no-save mig.R
+rm -f mig.Rout

@@ -12,26 +12,17 @@
 
 using namespace std;
 
-map<double,double> P;
-map<double,double> Q;
+const double pi  =3.141592653589793238462;
 
-double rnorm(double mu, double sig){
-  double r = ( (double) rand() / (RAND_MAX) ) ;
-  r = floor(r*10000)/10000;
-  return( sig*(Q[r])+mu );
+double runif(){
+  return (double) rand() / (RAND_MAX); 
 }
 
-void readZ(){
-  ifstream in;
-  double p, q;
-  
-  in.open("ztable.txt");
-  while (in >> p){
-    in >> q;
-    P[q] = p;
-    Q[p] = q;  
-  }
-  in.close();
+double rnorm(double mu, double sd){
+  double u1 = runif();
+  double u2 = runif();
+  double rnorm01 = sqrt(-2.0 * log(u1)) * sin(2.0*pi*u2);
+  return mu + sd * rnorm01;
 }
 
 double la(vector<double> x, double a, double b){
@@ -42,6 +33,7 @@ double la(vector<double> x, double a, double b){
   }
   return ( 4 * log(a) - a/20 + n*(lgamma(a+b)-lgamma(a)) + (a-1)*slx );
 }
+
 double lb(vector<double> x, double a, double b){
   size_t n = x.size();
   double slx = 0;
@@ -66,7 +58,7 @@ void mig(vector<double> x){
       canda = rnorm(M[i][0], csa);
       if (canda > 0) {
         r = la(x,canda,M[i][1]) - la(x,M[i][0],M[i][1]);
-        if (r > log( (double) rand() / (RAND_MAX) ) ){
+        if (r > log(runif()) ){
           M[i][0] = canda;
           cnta++;
         }
@@ -75,7 +67,7 @@ void mig(vector<double> x){
       candb = rnorm(M[i][1], csb);
       if (candb > 0){
         r = lb(x,M[i][0],candb)-lb(x,M[i][0],M[i][1]);
-        if (r > log( (double) rand() / (RAND_MAX) ) ){
+        if (r > log(runif()) ){
           M[i][1] = candb;
           cntb++;
         }
@@ -101,7 +93,10 @@ int main(){
   x.push_back(.79);
   x.push_back(.75);
   x.push_back(.8);
-  readZ();
   mig(x);
+
+  system("R CMD BATCH --no-save plot.R");
+  system("rm -f plot.Rout");
+
   return 0;
 }

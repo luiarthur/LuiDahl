@@ -70,8 +70,8 @@ object mig{
       i += 1
     }
 
-    println(cnta/N+" "+cntb/N)
-    M = M.drop(5000);
+    println(cnta/N+" "+cntb/N) //acceptance rates
+    M = M.drop(5000); .//burn in
     writeToFile("sout.txt", M)
   }
 }

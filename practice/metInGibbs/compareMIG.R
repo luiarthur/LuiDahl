@@ -1,6 +1,8 @@
-rout <- read.table("/data/arthurll/arthur/Dahl/scalaP/metInGibbs/R/rout.txt",header=F)
-cout <- read.table("/data/arthurll/arthur/Dahl/scalaP/metInGibbs/cpp/cout.txt",header=F)
-sout <- read.table("/data/arthurll/arthur/Dahl/scalaP/metInGibbs/scala/sout.txt",header=F)
+#!/usr/bin/env Rscript
+
+rout <- read.table("R/rout.txt",header=F)
+cout <- read.table("cpp/cout.txt",header=F)
+sout <- read.table("scala/sout.txt",header=F)
 
 mr <- rout[,1]/(rout[,1]+rout[,2])
 mc <- cout[,1]/(cout[,1]+cout[,2])
@@ -13,3 +15,5 @@ lines(density(ms),col='green',lwd=2)
 abline(v=mean(mr), col='blue')
 abline(v=mean(mc), col='red')
 abline(v=mean(ms), col='green')
+
+system("firefox *.pdf")

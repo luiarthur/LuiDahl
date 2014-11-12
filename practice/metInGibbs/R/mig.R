@@ -9,6 +9,7 @@ lb <- function( x, a, b ){
       }
 
 mig <- function ( x, csa = 50, csb = 20, N = 10^6 ){
+         cat(paste(rep("#",50),collapse="")); cat("\n")
          out <- matrix(0,N,2)
          out[1,1] <- 5 * 20
          out[1,2] <- 8 * 30
@@ -33,9 +34,14 @@ mig <- function ( x, csa = 50, csb = 20, N = 10^6 ){
                cntb <- cntb + 1
              }
            }
+
+           if (i %% (N/50) == 0) cat("#")
+
          }
+         cat("\n")
          print(cnta/N); print(cntb/N)
          return(out[-(1:5000),])
 }
 
-write(t(mig(data)), '/data/arthurll/arthur/Dahl/scala/metInGibbs/R/rout.txt', 2)
+X <- mig(data,N=10^5)
+write(t(X), 'rout.txt', 2)

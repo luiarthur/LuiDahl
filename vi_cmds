@@ -10,3 +10,10 @@
 :vsp ---------------------------------vertical split screen
 Ctrl-ww ------------------------------change panes
 
+Record a macro to delete every other row:
+  Start in command mode. 
+  Go to the beginning of the file by pressing gg.
+  Press qq (begin recording).
+  Click arrow down and press dd after.
+  Press q (end recording).
+  Press 10000@q

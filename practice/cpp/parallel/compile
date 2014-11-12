@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#g++ -g -Wall -o parallel parallel.cpp -fopenmp -lpthread
+g++ -O2 -fopenmp -o parallel  parallel.cpp 
+

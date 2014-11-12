@@ -2,4 +2,31 @@
 #   export PS1="\d :~$ "
 #   see http://askubuntu.com/questions/16728/hide-current-working-directory-in-terminal  
 #   for more info.
+#
+# For vpn access:
+# sudo apt-get install network-manager openconnect-gnome
 
+# https://help.ubuntu.com/community/SSH/OpenSSH/Configuring
+#
+# 1) On the computer you want to ssh into:
+# $  sudo apt-get install openssh-server
+# 2) use ifconfig to get the IP address
+# 3) You can now ssh into
+
+#How to upgrade R in Ubuntu 12.04
+#http://starlinq.livejournal.com/3314.html
+#
+#Open your sources.list file in gedit
+#
+#1: sudo vi /etc/apt/sources.list
+#
+#and add the following line:
+#2: deb http://cran.cnr.berkeley.edu/bin/linux/ubuntu/ precise/
+#
+#Note that you don't have to use that mirror. You may use any mirror from the list here : http://cran.r-project.org/mirrors.html
+#
+#Add the secure APT key to your system with one command
+#3: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+#
+#Update your sources and upgrade your installation
+#4: sudo apt-get update && sudo apt-get upgrade

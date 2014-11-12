@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rm -f mig plot.pdf plot.Rout cout.txt
