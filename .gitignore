@@ -1,3 +1,14 @@
 *.class
 classes
 *.*~
+*.doc
+.*.swp
+*.*.swp
+**.swp
+*.jpeg
+*.png
+*.pdf
+*.aux
+*.log
+.hongkong
+
