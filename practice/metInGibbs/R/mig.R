@@ -1,15 +1,16 @@
+library(doMC)
+
 data <- c( .81, .83, .79, .75, .8 )
 la <- function( x, a, b ){
         n <- length(x)
-        return( 4 * log(a) - a/20 + n*(lgamma(a+b)-lgamma(a)) + (a-1)*sum(log(x)) )
+        4 * log(a) - a/20 + n*(lgamma(a+b)-lgamma(a)) + (a-1)*sum(log(x))
       }
 lb <- function( x, a, b ){
         n <- length(x)
-        return ( 7 * log(b) - b/30 + n * (lgamma(a+b)-lgamma(b)) + (b-1) * sum (log(1-x)) )
+        7 * log(b) - b/30 + n * (lgamma(a+b)-lgamma(b)) + (b-1) * sum (log(1-x))
       }
 
 mig <- function ( x, csa = 50, csb = 20, N = 10^6 ){
-         cat(paste(rep("#",50),collapse="")); cat("\n")
          out <- matrix(0,N,2)
          out[1,1] <- 5 * 20
          out[1,2] <- 8 * 30
@@ -35,13 +36,14 @@ mig <- function ( x, csa = 50, csb = 20, N = 10^6 ){
              }
            }
 
-           if (i %% (N/50) == 0) cat("#")
+           if (i %% (N/50) == 0) cat("\r","Progress: ",i/N)
 
          }
-         cat("\n")
-         print(cnta/N); print(cntb/N)
-         return(out[-(1:5000),])
+
+         list("draws"=out[-(1:5000),],"acc.a"=cnta/N,"acc.b"=cntb/N)
 }
 
-X <- mig(data,N=10^5)
-write(t(X), 'rout.txt', 2)
+registerDoMC(system("nproc",intern=T))
+speed <- system.time(out <- foreach(i=1:16) %dopar% mig(data,N=10^5))
+cat("\n")
+speed
