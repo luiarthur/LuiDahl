@@ -9,8 +9,12 @@
 #include <ctime>
 #include <time.h>
 
+#include <iostream> // to do speed check
+#include <chrono>   // to do speed check
+
 
 using namespace std;
+using namespace std::chrono; // to do speed check
 
 const double pi  =3.141592653589793238462;
 
@@ -86,6 +90,7 @@ void mig(vector<double> x){
     out.close();
 }
 
+
 int main(){
   vector <double> x;
   x.push_back(.81);
@@ -93,7 +98,12 @@ int main(){
   x.push_back(.79);
   x.push_back(.75);
   x.push_back(.8);
-  mig(x);
+
+  high_resolution_clock::time_point t1 = high_resolution_clock::now();
+    mig(x);
+  high_resolution_clock::time_point t2 = high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::seconds>(t2-t1).count();
+  cout << duration <<endl;
 
   system("R CMD BATCH --no-save plot.R");
   system("rm -f plot.Rout");

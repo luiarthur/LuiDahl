@@ -1,3 +1,3 @@
 #!/bin/bash
 
-g++ -g -o mig -Wall mig.cpp
+g++ -g -o mig -Wall mig.cpp -std=c++0x
