@@ -43,7 +43,8 @@ mig <- function ( x, csa = 50, csb = 20, N = 10^6 ){
          list("draws"=out[-(1:5000),],"acc.a"=cnta/N,"acc.b"=cntb/N)
 }
 
-registerDoMC(system("nproc",intern=T))
-speed <- system.time(out <- foreach(i=1:16) %dopar% mig(data,N=10^5))
-cat("\n")
+#registerDoMC(system("nproc",intern=T))
+#speed <- system.time(out <- foreach(i=1:16) %dopar% mig(data,N=10^5))
+#cat("\n")
+speed <- system.time(out <- mig(data))
 speed

@@ -46,6 +46,8 @@ object mig{
     var m = Vector.fill(1)(100.0); m = m:+ 240.0
     var M = Vector.fill(1)(m); M = M :+ m;
 
+    val t1 = System.currentTimeMillis
+
     while (i < N){
 
       canda = rnorm( (M(i)(0)), csa)
@@ -71,8 +73,11 @@ object mig{
     }
 
     println(cnta/N+" "+cntb/N) //acceptance rates
-    M = M.drop(5000); .//burn in
+    M = M.drop(5000); //burn in
     writeToFile("sout.txt", M)
+    
+    val t2 = System.currentTimeMillis
+    println("Execution Time: "+(t2-t1)/1000+"s")
   }
 }
 

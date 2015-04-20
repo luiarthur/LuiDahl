@@ -2,4 +2,4 @@
 
 mkdir -p classes # creates the directory "classes" if it does not exist
 scalac -d classes Gamma.scala
-scalac -d classes mig.scala
+scalac -d classes -cp classes mig.scala
